@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 
+  - AWS::Serverless-2016-10-31
+  - Name: DatadogServerless
+    Parameters:
+      stackName: !Ref "AWS::StackName"
+      apiKey: 434486c28a50b9acd7830bbc129ca5eb
+      nodeLayerVersion: 78
+      extensionLayerVersion: 22
+      site: datadoghq.com 
+      env: !Ref Env # Optional
+      service: me-transaction-processor
+Description: >
+  me-transaction-processor
+  Magic Eden transaction processor
+
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-06-06T22:53:11.390'
+      EntityTableName: playdust-parrotfish-entitydb
+      ServiceName: playdust-parrotfish-me-processor-testing
+      FunctionName: me-transaction-processor-testing
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-prod-entitydb/stream/2022-06-07T18:55:10.458'
+      EntityTableName: playdust-parrotfish-prod-entitydb
+      ServiceName: playdust-parrotfish-me-processor-prod
+      FunctionName: me-transaction-processor-prod
+Resources:
+  MagicEdenTransactionProcessor:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties: 
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+      CodeUri: ./build
+      FunctionName: !FindInMap [ EnvMapping, !Ref Env, FunctionName ]
+      Handler: lambdaEntrypoint.handler
+      Description: ME transaction processor
+      MemorySize: 512
+      Architectures:
+        - x86_64
+      Policies:
+        - AmazonDynamoDBFullAccess
+          # By commenting this out, this disables the lambda from getting triggered. To enable the lambda, please uncomment the following lines
+          # Events:
+          #   Stream:
+          #     Type: DynamoDB
+          #     Properties:
+          #       Stream: !FindInMap [ EnvMapping, !Ref Env, DynamoDBARN ]
+          #       BatchSize: 1
+          #       StartingPosition: TRIM_HORIZON
+          #       FilterCriteria:
+          #         Filters:
+          #           - Pattern: "{ \"dynamodb\": { \"NewImage\": { \"type\": { \"S\": [ \"transaction\" ] },  \"tag\": { \"S\": [\"M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K\"] } } } }"

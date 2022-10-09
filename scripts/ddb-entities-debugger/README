@@ -1,0 +1,16 @@
+Debug script to verify that given a mintAddress all the connected entities are present in the DB.
+
+for a given mintAddress:
+-MetaplexOnChainMetadata
+-MetaplexOffChainMetadata
+-playdustCollection-DERIVED
+-collection4NFT-DERIVED
+-NFT4Collection-DERIVED
+-playdustCollection-OnChainCollection (if present)
+-collection4NFT-OnChainCollection (if present)
+-NFT4Collection-OnChainCollection (if present)
+-offchainMetadata4Collection-DERIVED
+-offchainMetadata4Collection-OnChainCollection (if present)
+-mintAddress ???
+-NFTRarity-DERIVED
+-NFTRarity-OnChainCollection (if present)

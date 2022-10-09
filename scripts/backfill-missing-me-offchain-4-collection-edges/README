@@ -1,0 +1,3 @@
+Backfill marketdata 4 collection objects script does as it's name suggests. It cross checks all the execute sale transaction objects with the marketdata4collection objects. if a marketdata4collection object already exists, it skips the executesale transaction and writes nothing new for it.
+
+For those without marketdata4collection related objects, it groups transactions by mint, lookup collection ids by mint, and creates a md4collection object for each transaction for each collection id!

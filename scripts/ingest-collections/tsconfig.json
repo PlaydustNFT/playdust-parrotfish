@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "outDir": "./out",
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "target": "es5",
+        "esModuleInterop": true
+    }
+}

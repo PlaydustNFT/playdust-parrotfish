@@ -1,0 +1,5 @@
+Backfill collection price / attribute data script does as it's name suggests. It reads a list of collection ids from a file, and for each collection id it processes the CollectionPriceDataEntity & CollectionAttributeDataEntity.
+
+The logic itself is directly taken from the existing collection-price-processor & collection-attribute-processor.
+
+Each task reads from the database to get all relevant data for it's respective calculation and then writes a single item to the database which includes the results of the calculation. For additional information regarding the calculations managed by each processor, please refer to their respective processors in the top level of the playdust parrotfish repo.

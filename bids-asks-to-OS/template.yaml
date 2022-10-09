@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+  - Name: DatadogServerless
+    Parameters:
+      stackName: !Ref "AWS::StackName"
+      apiKey: 434486c28a50b9acd7830bbc129ca5eb
+      nodeLayerVersion: 78
+      extensionLayerVersion: 22
+      site: "datadoghq.com"
+      env: !Ref Env # Optional
+      service: bids-asks-to-OS 
+Description: >
+  metadata-aggregation-to-OS
+
+  NFT bids/asks are aggregated and inserted into OS
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-06-06T22:53:11.390'
+      EntityTableName: playdust-parrotfish-entitydb
+      FunctionName: bids-asks-to-OS-testing
+      OpenSearchIndex: 'nft-metadata2'
+      OpenSearchUrl: 'https://upensearch-url/_bulk'
+      OpenSearchUserName: 'playdust'
+      OpenSearchPassword: 'fdj.rya9ady.VYJ_mrg'
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-prod-entitydb/stream/2022-06-07T18:55:10.458'
+      EntityTableName: playdust-parrotfish-prod-entitydb
+      FunctionName: bids-asks-to-OS-prod
+      OpenSearchIndex: 'nft-metadata2'
+      OpenSearchUrl: 'https://opensearch-url/_bulk'
+      OpenSearchUserName: 'playdust'
+      OpenSearchPassword: 'fdj.rya9ady.VYJ_mrg'
+
+Resources:
+  BidsAsksToOS:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 301
+      QueueName: BidsAsks-to-OS-Queue
+  metadataAggregationToOS:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties: 
+      FunctionName: !FindInMap [ EnvMapping, !Ref Env, FunctionName ]
+      CodeUri: ./build
+      Handler: lambdaEntrypoint.handler
+      MemorySize: 256 
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+          MINT_OPEN_SEARCH_INDEX: !FindInMap [ EnvMapping, !Ref Env, OpenSearchIndex ]
+          OPEN_SEARCH_URL: !FindInMap [ EnvMapping, !Ref Env, OpenSearchUrl ]
+          OPEN_SEARCH_USERNAME: !FindInMap [ EnvMapping, !Ref Env, OpenSearchUserName ]
+          OPEN_SEARCH_PASSWORD: !FindInMap [ EnvMapping, !Ref Env, OpenSearchPassword ]
+          QUEUE_URL: !Ref BidsAsksToOS
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonOpenSearchServiceFullAccess
+        - SQSPollerPolicy:
+            QueueName: !GetAtt BidsAsksToOS.QueueName
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt BidsAsksToOS.Arn
+            BatchSize: 500
+            MaximumBatchingWindowInSeconds: 1

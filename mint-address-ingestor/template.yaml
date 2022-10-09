@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+  - Name: DatadogServerless
+    Parameters:
+      stackName: !Ref "AWS::StackName"
+      apiKey: 434486c28a50b9acd7830bbc129ca5eb
+      nodeLayerVersion: 78
+      extensionLayerVersion: 22
+      site: datadoghq.com
+      env: !Ref Env # Optional
+      service: mint-address-ingestor
+Description: >
+  mint-address-ingestor
+  SAM template for mint-address-ingestor
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-04-28T17:51:21.735' 
+      EntityTableName: playdust-parrotfish-entitydb
+      FunctionName: mint-address-ingestor-testing
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-entitydb/stream/2022-06-06T17:49:47.240'
+      EntityTableName: playdust-parrotfish-entitydb
+      FunctionName: mint-address-ingestor-prod 
+
+Resources:
+  MetadataIngestorSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 61
+  MintAddressIngestorFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: !FindInMap [ EnvMapping, !Ref Env, FunctionName ]
+      Description: gets metadata
+      CodeUri: ./build
+      Handler: lambdaEntrypoint.handler
+      MemorySize: 1024
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+          SLOT_QUEUE_URL: !Ref MetadataIngestorSQS
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - SQSPollerPolicy:
+            QueueName: !GetAtt MetadataIngestorSQS.QueueName
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt MetadataIngestorSQS.Arn
+            BatchSize: 200
+            MaximumBatchingWindowInSeconds: 5
+                

@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+  - Name: DatadogServerless
+    Parameters:
+      stackName: !Ref "AWS::StackName"
+      apiKey: 434486c28a50b9acd7830bbc129ca5eb
+      nodeLayerVersion: 78
+      extensionLayerVersion: 22
+      site: "datadoghq.com"
+      env: !Ref Env # Optional
+      service: collection-price-processor
+Description: >
+  collection-price-processor
+
+  The collection-price-processor is designed to calculate the current floor/ceiling price & volumes executed for a given collection on a per-marketplace basis
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 360
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-06-06T22:53:11.390'
+      EntityTableName: playdust-parrotfish-entitydb
+      MaxConditionExpressionLength: 1
+      FunctionName: collection-price-processor-testing
+      CollectionIDSQSName: 'DuplicateCollectionIdtoOSQueue'
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-prod-entitydb/stream/2022-06-07T18:55:10.458'
+      EntityTableName: playdust-parrotfish-prod-entitydb
+      MaxConditionExpressionLength: 1
+      FunctionName: collection-price-processor-prod
+      CollectionIDSQSName: 'DuplicateCollectionIdtoOSQueue'
+
+Resources:
+  UniqueCollectionIdPriceSQSQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 361
+      QueueName: UniqueCollectionIdPriceQueue
+  CollectionPriceProcessor:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties: 
+      FunctionName: !FindInMap [ EnvMapping, !Ref Env, FunctionName ]
+      CodeUri: ./build
+      Handler: lambdaEntrypoint.handler
+      MemorySize: 512
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+          MAX_CONDITION_EXPRESSION_LENGTH: !FindInMap [ EnvMapping, !Ref Env, MaxConditionExpressionLength ]
+          COLLECTION_OS_QUEUE_NAME: !FindInMap [ EnvMapping, !Ref Env, CollectionIDSQSName ]
+          INBOUND_SQS_QUEUE_URL: !Ref UniqueCollectionIdPriceSQSQueue
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonSQSFullAccess
+        - SQSPollerPolicy:
+            QueueName: !GetAtt UniqueCollectionIdPriceSQSQueue.QueueName
+        - SQSSendMessagePolicy:
+            QueueName: !FindInMap [ EnvMapping, !Ref Env, CollectionIDSQSName ]
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt UniqueCollectionIdPriceSQSQueue.Arn
+            BatchSize: 10
+            MaximumBatchingWindowInSeconds: 1

@@ -1,0 +1,45 @@
+{
+    "Records": [
+      {
+        "eventID": "3",
+        "eventName": "INSERT",
+        "eventVersion": "1.0",
+        "eventSource": "aws:dynamodb",
+        "awsRegion": "us-east-1",
+        "dynamodb": {
+          "Keys": {
+            "globalId": {
+              "N": "1010101"
+            }
+          },
+          "NewImage": {
+            "globalId": {
+              "S": "trigger-collectionPriceProcessor-marketData4Collection-bidOrderState-36ExGZasq5KJxjzkJUnyRfP4La5kDHq8UojRR9Uo9Moe-7ysS2LBYM373zpk1akroGrGWxdaWTzV7ULc9JmtxPw3P-MagicEdenV2-FbMgyHab7LxdhnSAFueCR9JGdCZKQNornmHEf4vocGGQ-trigger-collectionPriceProcessor"
+            },
+            "createdAt": {
+              "N": "1653997638"
+            },
+            "data": {
+              "S": "DTH-2zgmHDyKnMfnMWeuG8fkzrfHAc8KrgXruwHLYdqHaPHa"
+            },
+            "id": {
+              "S": "trigger-collectionPriceProcessor-marketData4Collection-bidOrderState-36ExGZasq5KJxjzkJUnyRfP4La5kDHq8UojRR9Uo9Moe-7ysS2LBYM373zpk1akroGrGWxdaWTzV7ULc9JmtxPw3P-MagicEdenV2-FbMgyHab7LxdhnSAFueCR9JGdCZKQNornmHEf4vocGGQ"
+            },
+            "triggerSubtype": {
+              "S": "collectionAttributeProcessor"
+            },
+            "type": {
+              "S": "trigger"
+            },
+            "updatedAt": {
+              "N": "1653997638"
+            }
+          },
+          "SequenceNumber": "111",
+          "SizeBytes": 26,
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "eventSourceARN": "stream-ARN"
+      }
+    ]
+  }

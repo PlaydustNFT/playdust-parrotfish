@@ -1,0 +1,38 @@
+{
+    "symbol": "ghostface_gen_2",
+    "candyMachineIds": [
+      "HxXK7d61s9Hxqjf4HLVRoTZXYNhwknMPiQdyKkSw6vsa"
+    ],
+    "name": "Ghostface GEN 2",
+    "image": "https://bafkreif4roy46woavm7lyxy2gzxw4uungbujstkeqpiuwnssdwf6ekgfzy.ipfs.nftstorage.link/",
+    "categories": [
+      "pfps"
+    ],
+    "description": ".",
+    "createdAt": "2022-06-01T15:00:22.248Z",
+    "enabledAttributesFilters": true,
+    "enabledVersionFilter": false,
+    "isDraft": false,
+    "website": "",
+    "twitter": "https://twitter.com/GhostfaceNFT",
+    "discord": "",
+    "stackBy": [],
+    "sortBy": "",
+    "updatedAt": "2022-06-01T15:15:26.181Z",
+    "watchlistCount": 7,
+    "derivativeDetails": {
+      "originLink": "",
+      "originName": ""
+    },
+    "enabledTotalSupply": true,
+    "enabledUniqueOwners": true,
+    "iframe": "",
+    "isDerivative": false,
+    "nftImageType": "",
+    "onChainCollectionAddress": "DHyU2RueMzTw8QuhRxZqEuAB2Cu7jBYrr1seTognWxyy",
+    "rarity": {
+      "showHowrare": true,
+      "showMoonrank": true
+    },
+    "volumeAll": 0
+  }

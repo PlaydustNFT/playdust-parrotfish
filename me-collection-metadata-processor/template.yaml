@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  me-collection-metadata-processor
+  Magic Eden collection metadata processor
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-04-28T17:51:21.735' 
+      EntityTableName: playdust-parrotfish-entitydb
+      FunctionName: me-collection-metadata-processor-testing
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-entitydb/stream/2022-04-28T17:50:09.889'
+      EntityTableName: playdust-parrotfish-entitydb
+      FunctionName: me-collection-metadata-processor-prod
+Resources:
+  MECollectionMetadataProcessor:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties: 
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+      CodeUri: ./build
+      Handler: lambdaEntrypoint.handler
+      FunctionName: !FindInMap [ EnvMapping, !Ref Env, FunctionName ]
+      Description: ME collection metadata processor
+      MemorySize: 512
+      Architectures:
+        - x86_64
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - S3FullAccessPolicy:
+            BucketName: raw-me-collection-metadata
+      Events:
+        CreateMetadataEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref RawMECollectionMetadataBucket
+            Events: s3:ObjectCreated:*
+
+  RawMECollectionMetadataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: raw-me-collection-metadata

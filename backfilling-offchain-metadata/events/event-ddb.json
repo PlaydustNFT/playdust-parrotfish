@@ -1,0 +1,41 @@
+{
+    "Records": [
+      {
+        "eventID": "3",
+        "eventName": "INSERT",
+        "eventVersion": "1.0",
+        "eventSource": "aws:dynamodb",
+        "awsRegion": "us-east-1",
+        "dynamodb": {
+          "Keys": {
+            "globalId": {
+              "N": "1010101"
+            }
+          },
+          "NewImage": {
+            
+            "data":{
+              "M":{
+                "mint": {
+                  "S": "9pvVgRgqPseJdCFKszZWCyy6598Y1nebMFCULj9qP42w"
+                },
+                "data": {
+                  "M": {
+                    "uri":{
+                      "S": "https://arweave.net/wRb1ecEhlICq9yzuPxPvKzDvYonPXNo8eiU0IZcMIQc"
+
+                    }
+                  }
+                }
+              }
+            }
+            
+          },
+          "SequenceNumber": "111",
+          "SizeBytes": 26,
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "eventSourceARN": "stream-ARN"
+      }
+    ]
+  }

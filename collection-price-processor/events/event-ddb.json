@@ -1,0 +1,46 @@
+{
+    "Records": [
+      {
+        "eventID": "c4ca4238a0b923820dcc509a6f75849b",
+        "eventName": "INSERT",
+        "eventVersion": "1.1",
+        "eventSource": "aws:dynamodb",
+        "awsRegion": "us-east-1",
+        "dynamodb": {
+          "Keys": {
+              "globalId": {
+                "N": "NFT4Collection-STARBOTS-GU3J48xaDcRgsCVayhtKMPeDAbfcabqsouv8uM2h4JYz-67XDX6gYSpargu1ca8G1ytRUj2sAq7GT2ATwke7aYd5e-trigger-collectionPriceProcessor"
+              }
+           },
+          "NewImage": {
+            "globalId": {
+              "S": "NFT4Collection-STARBOTS-GU3J48xaDcRgsCVayhtKMPeDAbfcabqsouv8uM2h4JYz-67XDX6gYSpargu1ca8G1ytRUj2sAq7GT2ATwke7aYd5e-trigger-collectionPriceProcessor"
+            },
+            "createdAt": {
+              "N": "1653445319"
+            },
+            "data": {
+              "S": "GLDHERO-BNaDSC3g8fgf8BebB8ovKefScNKjHotZsTeVJ33LL53h"
+            },
+            "id": {
+              "S": "STARBOTSNFT4Collection-STARBOTS-GU3J48xaDcRgsCVayhtKMPeDAbfcabqsouv8uM2h4JYz-67XDX6gYSpargu1ca8G1ytRUj2sAq7GT2ATwke7aYd5e"
+            },
+            "type": {
+              "S": "trigger"
+            },
+            "triggerSubtype": {
+              "S": "collectionPriceProcessor"
+            },
+            "updatedAt": {
+              "N": "1653445319"
+            }
+          },
+          "ApproximateCreationDateTime": 1428537600,
+          "SequenceNumber": "4421584500000000017450439091",
+          "SizeBytes": 26,
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "eventSourceARN": "arn:aws:dynamodb:us-east-1:123456789012:table/ExampleTableWithStream/stream/2015-06-27T00:48:05.899"
+      }
+    ]
+}

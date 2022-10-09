@@ -1,0 +1,320 @@
+{
+    "Records": [
+      {
+        "eventID": "3",
+        "eventName": "INSERT",
+        "eventVersion": "1.0",
+        "eventSource": "aws:dynamodb",
+        "awsRegion": "us-east-1",
+        "dynamodb": {
+          "Keys": {
+            "globalId": {
+              "N": "1010101"
+            }
+          },
+          "NewImage": {
+            "data": {
+              "M": {
+               "blockTime": {
+                      "N": 1650391361
+                  },
+                  "meta": {
+                      "M": {
+                          "innerInstructions": {
+                              "L": [
+                                  {
+                                      "M": {
+                                          "instructions": {
+                                              "L": [
+                                                  {
+                                                      "M": {
+                                                          "programIdIndex": {
+                                                              "N": "3"
+                                                          },
+                                                          "data": {
+                                                              "S": "11112nba6qLH4BKL4MW8GP9ayKApZeYn3LQKJdPdeSXbRW1n6UPeJ8y77ps6sAVwAjdxzh"
+                                                          },
+                                                          "accounts": {
+                                                              "L": [
+                                                                  {
+                                                                      "N": "0"
+                                                                  },
+                                                                  {
+                                                                      "N": "2"
+                                                                  }
+                                                              ]
+                                                          }
+                                                      }
+                                                  }
+                                              ]
+                                          },
+                                          "index": {
+                                              "N": "0"
+                                          }
+                                      }
+                                  }
+                              ]
+                          },
+                          "err": {
+                              "NULL": true
+                          },
+                          "postBalances": {
+                              "L": [
+                                  {
+                                      "N": "1202098847"
+                                  },
+                                  {
+                                      "N": "26500000000"
+                                  },
+                                  {
+                                      "N": "2011440"
+                                  },
+                                  {
+                                      "N": "1"
+                                  },
+                                  {
+                                      "N": "1461600"
+                                  },
+                                  {
+                                      "N": "5616720"
+                                  },
+                                  {
+                                      "N": "100142593680"
+                                  },
+                                  {
+                                      "N": "3654000"
+                                  },
+                                  {
+                                      "N": "953185920"
+                                  },
+                                  {
+                                      "N": "1009200"
+                                  },
+                                  {
+                                      "N": "1141440"
+                                  }                                              
+                              ]
+                          },
+                          "fee": {
+                              "N": "5000"
+                          },
+                          "preBalances": {
+                              "L": [
+                                  {
+                                      "N": "1204115287"
+                                  },
+                                  {
+                                      "N": "26500000000"
+                                  },
+                                  {
+                                      "N": "0"
+                                  },
+                                  {
+                                      "N": "1"
+                                  },
+                                  {
+                                      "N": "1461600"
+                                  },
+                                  {
+                                      "N": "5616720"
+                                  },
+                                  {
+                                      "N": "100142593680"
+                                  },
+                                  {
+                                      "N": "3654000"
+                                  },
+                                  {
+                                      "N": "953185920"
+                                  },
+                                  {
+                                      "N": "1009200"
+                                  },
+                                  {
+                                      "N": "1141440"
+                                  }
+                              ]
+                          },
+                          "logMessages": {
+                              "L": [
+                                  {
+                                      "S": "Program MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8 invoke [1]"
+                                  },
+                                  {
+                                      "S": "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]"
+                                  },
+                                  {
+                                      "S": "Program log: Instruction: SetAuthority"
+                                  },
+                                  {
+                                      "S": "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 1770 of 191192 compute units"
+                                  },
+                                  {
+                                      "S": "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success"
+                                  },
+                                  {
+                                      "S": "Program MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8 consumed 11889 of 200000 compute units"
+                                  },
+                                  {
+                                      "S": "Program MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8 success"
+                                  }
+                              ]
+                          },
+                          "postTokenBalances": {
+                              "L": [
+                              
+                              ]
+                          },
+                          "preTokenBalances": {
+                              "L": [
+                              
+                              ]
+                          },
+                          "rewards": {
+                              "L": []
+                          },
+                          "status": {
+                              "M": {
+                                  "Ok": {
+                                      "NULL": true
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "tag": {
+                      "S": "MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8"
+                  },
+                  "transaction": {
+                      "M": {
+                          "message": {
+                              "M": {
+                                  "instructions": {
+                                      "L": [
+                                          {
+                                              "M": {
+                                                  "programIdIndex": {
+                                                      "N": "10"
+                                                  },
+                                                  "data": {
+                                                      "S": "3Jmjmsq2jyrch4vKPxsWiSHEhvkJuVSqtVG7k3emXn8bzCX"
+                                                  },
+                                                  "accounts": {
+                                                      "L": [
+                                                          {
+                                                              "N": "0"
+                                                          },
+                                                          {
+                                                              "N": "3"
+                                                          },
+                                                          {
+                                                              "N": "4"
+                                                          },
+                                                          {
+                                                              "N": "5"
+                                                          },
+                                                          {
+                                                              "N": "1"
+                                                          },
+                                                          {
+                                                              "N": "6"
+                                                          },
+                                                          {
+                                                              "N": "7"
+                                                          },
+                                                          {
+                                                              "N": "2"
+                                                          },
+                                                          {
+                                                              "N": "6"
+                                                          },
+                                                          {
+                                                              "N": "8"
+                                                          },
+                                                          {
+                                                              "N": "3"
+                                                          },
+                                                          {
+                                                              "N": "9"
+                                                          }
+                                                      ]
+                                                  }
+                                              }
+                                          }
+                                      ]
+                                  },
+                                  "header": {
+                                      "M": {
+                                          "numReadonlySignedAccounts": {
+                                              "N": "0"
+                                          },
+                                          "numRequiredSignatures": {
+                                              "N": "1"
+                                          },
+                                          "numReadonlyUnsignedAccounts": {
+                                              "N": "8"
+                                          }
+                                      }
+                                  },
+                                  "accountKeys": {
+                                      "L": [
+                                          {
+                                              "S": "3AE4BC9fZZztj4Rxj7bG9CxvySa8rembN4rREmx5kYaq"
+                                          },
+                                          {
+                                              "S": "BqzHF9qnNeMCtNhEgTD3yzryHfbWvfdxgRUHnaE65TZg"
+                                          },
+                                          {
+                                              "S": "Cf27HFWwjcao4oHGrtvuZ9GLk31aR7b9NKWjLCet85VB"
+                                          },
+                                          {
+                                              "S": "11111111111111111111111111111111"
+                                          },
+                                          {
+                                              "S": "2taikTWBXSaDqo2exfG3NBGnoQjU8CxwaNaYqSX1Miom"
+                                          },
+                                          {
+                                              "S": "CCFLUrEwkS9rZ2Kr7UDZTAjZT5EKpF7Uae9uQZ1Xm8ci"
+                                          },
+                                          {
+                                              "S": "autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2"
+                                          },
+                                          {
+                                              "S": "E8cU1WiRWjanGxmn96ewBgk9vPTcL6AEZ1t6F6fkgUWe"
+                                          },
+                                          {
+                                              "S": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                                          },
+                                          {
+                                              "S": "SysvarRent111111111111111111111111111111111"
+                                          },
+                                          {
+                                              "S": "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K"
+                                          }
+                                      ]
+                                  },
+                                  "recentBlockhash": {
+                                      "S": "ATSHu2McyvgJ6Qsw6KHx4L1gNvV2oFsDuR1vekEGNTum"
+                                  }
+                              }
+                          },
+                          "signatures": {
+                              "L": [
+                                  {
+                                      "S": "3buqku3ZkWCyssxtBNnsoNMAKUF2ibcoRwgj4h3T9RznK5rd1MJyVNS5EnwLxUiQUS9q3HanspMCiQBwtYX9oRTJ"
+                                  }
+                              ]
+                          }
+                      }
+                  }
+              }
+            }
+          },
+          "SequenceNumber": "111",
+          "SizeBytes": 26,
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "eventSourceARN": "stream-ARN"
+      }
+    ]
+  }

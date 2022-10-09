@@ -1,0 +1,10 @@
+The backfill-program-tx-signature script simply fetches all the transaction signatures 
+from the solana blockchain for a given program address. The RPC specifies that max 1000
+signatures can be fetched in a single call. This is at the core of the mechanism to determine
+a stopping condition.
+
+The script will fetch transaction signatures in a loop until it reaches the stopping condition.
+Each signature will write to the file specified in the environment variables (see source code for details).
+
+### How to run the script
+npx ts-node entrypoint.ts

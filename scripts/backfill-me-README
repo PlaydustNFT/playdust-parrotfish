@@ -1,0 +1,22 @@
+This README covers the process of backfilling ME transactions.
+
+## High level overview
+The process works as follows:
+
+1) fetch the latest program tx signatures using the `backfill-program-tx-signatures` script
+2) store the output of `backfill-program-tx-signatures` (latest signatures list) in the `reconcile-signatures/files` directory
+3) fetch & parse transactions using the `backfill-me-transactions`, configured to write it's on-chain-failures / current signatures to `reconcile-signatures/files` directory
+    a) Run this process iteratively until all transactions have been backfilled
+
+Once the transactions have been backfilled, we can run the following subsequent processing:
+
+1) Backfill the marketdata4collection objects using `backfill-marketdata`
+2) Fetch current mint address list using `fetch-mint-addresses`
+3) use the `mint_address_list.txt` as input to the `backfill-active-orders` script
+4) Fetch the current collection id list using `fetch-collection-ids`
+5) use the `collection_id_list.txt` as input to the `backfill-collection-price-attribute-data`
+
+Once all of these steps are complete, the database should be backfilled with
+- All MEv2 program transactions parsed
+- All current listings (reflecting the most recent transaction signature from step 3 above)
+- Collection price data & Collection attribute data for all collections

@@ -1,0 +1,26 @@
+{
+  "name": "js",
+  "version": "1.0.0",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node js/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "-": "^0.0.1",
+    "axios": "^0.27.2",
+    "cloudflare-scraper": "^1.0.8",
+    "cloudscraper": "^4.6.0",
+    "extra": "^0.2.1",
+    "node-fetch": "^3.2.4",
+    "node-html-parser": "^5.3.3",
+    "plugin": "^0.3.3",
+    "puppeteer": "^14.1.1",
+    "qrate": "^1.2.1",
+    "stealth": "^0.4.0"
+  },
+  "description": ""
+}

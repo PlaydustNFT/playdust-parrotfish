@@ -1,0 +1,24 @@
+The backfill-me-transactions script reads a list of transaction signatures from a file and requests their payload from the Solana RPC endpoint url. It then feeds the payload into our MEv2
+transaction parsing script, which converts the transaction into the Playdust normalized format.
+
+The transactions are then written to the database. The database configuration options are the same as available in our other scripts. Options (self-explanatory):
+
+- process.env.ACCESS_KEY
+- process.env.SECRET_ACCESS_KEY
+- process.env.REGION
+- process.env.DYNAMODB_ENDPOINT
+- process.env.ENTITY_TABLE_NAME
+
+### Input
+the script will read from 1 file during it's execution
+- process.env.INPUT_FILE_PATH
+
+### Output
+the script will write 2 files during it's execution
+- process.env.ON_CHAIN_FAILURES_LOG
+- process.env.CURRENT_SIGNATURES_LOG
+
+Please see the top of the entrypoint.ts file for details about the configuration options for this script.
+
+### How to run the script
+npx ts-node entrypoint.ts

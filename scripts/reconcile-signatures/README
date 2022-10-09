@@ -1,0 +1,14 @@
+Reconcile Signatures is a single script which is responsible for generating a new set of 
+outstanding_signatures which is to be fed into the backfill-me-transactions process.
+
+In the backfill-me-transactions process, we write 2 files:
+1) on chain failures (./files/on_chain_failures_list.log): This consists of the signatures for the on-chain failed transactions (those which our parser/system can ignore)
+2) current signatures (./files/current_signatures_list.log): This consists of the signatures for successfully received & parsed transactions
+
+The transaction fetching / parsing is an iterative process. The reason is because sometimes the RPC node fails to return the payload for a given request, thus we need to re-request the data for it. This script helps us to create a new file with a new set of transaction signatures which we need to request from the RPC node. We should run it once the backfill-me-transactions process completes.
+
+Once the backfill-me-transactions process completes, to perform the reconciliation and prepare for subsequent script run, simply run `$ ./reconcile.sh`. Also, it's worth noting that the backfill-me-transactions should be pointed to write to the `./files` directory (it is by default) and should use the following naming conventions:
+
+- on_chain_failures_list.log (written to by backfill-me-transactions)
+- current_signatures_list.log (written to by backfill-me-transactions)
+- outstanding_transactions.txt (read as input by backfill-me-transactions)

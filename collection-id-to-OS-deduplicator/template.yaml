@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+  - Name: DatadogServerless
+    Parameters:
+      stackName: !Ref "AWS::StackName"
+      apiKey: 434486c28a50b9acd7830bbc129ca5eb
+      nodeLayerVersion: 78
+      extensionLayerVersion: 22
+      site: "datadoghq.com"
+      env: !Ref Env # Optional
+      service: collection-id-deduplicator
+Description: >
+  collection-id-deduplicator
+
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 180
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-06-06T22:53:11.390'
+      EntityTableName: playdust-parrotfish-entitydb
+      FunctionName: collection-id-to-OS-deduplicator-testing
+      UniqueCollectionIdSQSQueue: CollectionMetadata-to-OS-Queue
+      MaxSqsBatches: 100
+      MaxSqsMessagesPerBatch: 10
+      MinEmptyIterations: 5
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-prod-entitydb/stream/2022-06-07T18:55:10.458'
+      EntityTableName: playdust-parrotfish-prod-entitydb
+      FunctionName: collection-id-to-OS-deduplicator-prod
+      UniqueCollectionIdSQSQueue: CollectionMetadata-to-OS-Queue
+      MaxSqsBatches: 100
+      MaxSqsMessagesPerBatch: 10
+      MinEmptyIterations: 5
+
+Resources:
+  DuplicateCollectionIdtoOSSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 181
+      QueueName: DuplicateCollectionIdtoOSQueue
+  CollectionIdToOSDeduplicator:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties: 
+      FunctionName: !FindInMap [ EnvMapping, !Ref Env, FunctionName ]
+      CodeUri: ./build
+      Handler: lambdaEntrypoint.handler
+      MemorySize: 512
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+          OUTBOUND_SQS_QUEUE_NAME: !FindInMap [ EnvMapping, !Ref Env, UniqueCollectionIdSQSQueue ]
+          INBOUND_SQS_QUEUE_URL: !Ref DuplicateCollectionIdtoOSSQS
+          MAX_SQS_BATCHES: !FindInMap [ EnvMapping, !Ref Env, MaxSqsBatches ]
+          MAX_SQS_MESSAGES_PER_BATCH: !FindInMap [ EnvMapping, !Ref Env, MaxSqsMessagesPerBatch ]
+          MIN_EMPTY_ITERATIONS: !FindInMap [ EnvMapping, !Ref Env, MinEmptyIterations ]
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonSQSFullAccess
+        - SQSPollerPolicy:
+            QueueName: !GetAtt DuplicateCollectionIdtoOSSQS.QueueName
+        - SQSSendMessagePolicy:
+            QueueName: !FindInMap [ EnvMapping, !Ref Env, UniqueCollectionIdSQSQueue ]
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes)

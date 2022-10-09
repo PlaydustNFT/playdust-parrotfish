@@ -1,0 +1,79 @@
+{
+    "Records": [
+      {
+        "eventID": "3",
+        "eventName": "INSERT",
+        "eventVersion": "1.0",
+        "eventSource": "aws:dynamodb",
+        "awsRegion": "us-east-1",
+        "dynamodb": {
+          "Keys": {
+            "globalId": {
+              "N": "bidTransaction-3buqku3ZkWCyssxtBNnsoNMAKUF2ibcoRwgj4h3T9RznK5rd1MJyVNS5EnwLxUiQUS9q3HanspMCiQBwtYX9oRTJ"
+            }
+          },
+          "NewImage": {
+                "createdAt": {
+                    "N": "1651713597"
+                },
+                "data": {
+                    "M": {
+                        "buyerWalletAccount": {
+                            "S": "3AE4BC9fZZztj4Rxj7bG9CxvySa8rembN4rREmx5kYaq"
+                        },
+                        "pdaData": {
+                            "NULL": true
+                        },
+                        "marketplace": {
+                            "S": "MagicEdenV2"
+                        },
+                        "sellerPdaAccount": {
+                            "NULL": true
+                        },
+                        "signature": {
+                            "S": "3buqku3ZkWCyssxtBNnsoNMAKUF2ibcoRwgj4h3T9RznK5rd1MJyVNS5EnwLxUiQUS9q3HanspMCiQBwtYX9oRTJ"
+                        },
+                        "created": {
+                            "N": "1650391361"
+                        },
+                        "price": {
+                            "N": "26500000000"
+                        },
+                        "buyerPdaAccount": {
+                            "S": "Cf27HFWwjcao4oHGrtvuZ9GLk31aR7b9NKWjLCet85VB"
+                        },
+                        "sellerWalletAccount": {
+                            "NULL": true
+                        },
+                        "tokenMintAccount": {
+                            "S": "8A273SA7bP9ViTBfnnM3YN2bBtxwDKf9bDixnQZyeF5v"
+                        },
+                        "type": {
+                            "S": "bidTransaction"
+                        }
+                    }
+                },
+                "globalId": {
+                    "S": "bidTransaction-3buqku3ZkWCyssxtBNnsoNMAKUF2ibcoRwgj4h3T9RznK5rd1MJyVNS5EnwLxUiQUS9q3HanspMCiQBwtYX9oRTJ"
+                },
+                "id": {
+                    "S": "3buqku3ZkWCyssxtBNnsoNMAKUF2ibcoRwgj4h3T9RznK5rd1MJyVNS5EnwLxUiQUS9q3HanspMCiQBwtYX9oRTJ"
+                },
+                "triggerSubtype": {
+                    "S": "activeOrdersProcessor"
+                },
+                "type": {
+                    "S": "trigger"
+                },                
+                "updatedAt": {
+                    "N": "1651713597"
+                }
+           },
+          "SequenceNumber": "111",
+          "SizeBytes": 26,
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "eventSourceARN": "stream-ARN"
+      }
+    ]
+  }

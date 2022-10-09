@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  backfilling-offchain-metadata-processor
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-04-28T17:51:21.735' 
+      EntityTableName: playdust-parrotfish-entitydb
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-prod-entitydb/stream/2022-06-07T18:55:10.458'
+      EntityTableName: playdust-parrotfish-prod-entitydb
+
+Resources:
+  backfillingOffchainMetadata:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties: 
+      CodeUri: ./build
+      Handler: lambdaEntrypoint.handler
+      MemorySize: 256
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !FindInMap [ EnvMapping, !Ref Env, DynamoDBARN ]
+            BatchSize: 1
+            StartingPosition: TRIM_HORIZON
+            FilterCriteria:
+              Filters:
+                - Pattern: "{ \"dynamodb\": { \"NewImage\": { \"type\": { \"S\": [ \"MetaplexOnChainMetadata\" ] } } } }"

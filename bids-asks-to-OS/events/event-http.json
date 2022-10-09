@@ -1,0 +1,62 @@
+{
+  "body":"{\"Records\":[{\"eventID\":\"3\",\"eventName\":\"INSERT\",\"eventVersion\":\"1.0\",\"eventSource\":\"aws:dynamodb\",\"awsRegion\":\"us-east-1\",\"dynamodb\":{\"Keys\":{\"globalId\":{\"N\":\"1010101\"}},\"NewImage\":{\"data\": {\"blockTime\":1650391361,\"meta\":{\"err\":null,\"fee\":5000,\"innerInstructions\":[{\"index\":0,\"instructions\":[{\"accounts\":[0,2],\"data\":\"11112nba6qLH4BKL4MW8GP9ayKApZeYn3LQKJdPdeSXbRW1n6UPeJ8y77ps6sAVwAjdxzh\",\"programIdIndex\":3}]}],\"postBalances\":[1202098847,26500000000,2011440,1,1461600,5616720,100142593680,3654000,953185920,1009200,1141440],\"postTokenBalances\":[],\"preBalances\":[1204115287,26500000000,0,1,1461600,5616720,100142593680,3654000,953185920,1009200,1141440],\"preTokenBalances\":[],\"rewards\":[],\"status\":{\"Ok\":null}},\"slot\":130450824,\"transaction\":{\"message\":{\"header\":{\"numReadonlySignedAccounts\":0,\"numReadonlyUnsignedAccounts\":8,\"numRequiredSignatures\":1},\"accountKeys\":[\"3AE4BC9fZZztj4Rxj7bG9CxvySa8rembN4rREmx5kYaq\",\"BqzHF9qnNeMCtNhEgTD3yzryHfbWvfdxgRUHnaE65TZg\",\"Cf27HFWwjcao4oHGrtvuZ9GLk31aR7b9NKWjLCet85VB\",\"11111111111111111111111111111111\",\"2taikTWBXSaDqo2exfG3NBGnoQjU8CxwaNaYqSX1Miom\",\"CCFLUrEwkS9rZ2Kr7UDZTAjZT5EKpF7Uae9uQZ1Xm8ci\",\"autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2\",\"E8cU1WiRWjanGxmn96ewBgk9vPTcL6AEZ1t6F6fkgUWe\",\"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA\",\"SysvarRent111111111111111111111111111111111\",\"M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K\"],\"recentBlockhash\":\"ATSHu2McyvgJ6Qsw6KHx4L1gNvV2oFsDuR1vekEGNTum\",\"instructions\":[{\"accounts\":[0,3,4,5,1,6,7,2,6,8,3,9],\"data\":\"3Jmjmsq2jyrch4vKPxsWiSHEhvkJuVSqtVG7k3emXn8bzCX\",\"programIdIndex\":10}],\"indexToProgramIds\":{}},\"signatures\":[\"3buqku3ZkWCyssxtBNnsoNMAKUF2ibcoRwgj4h3T9RznK5rd1MJyVNS5EnwLxUiQUS9q3HanspMCiQBwtYX9oRTJ\"]}}},\"SequenceNumber\":\"111\",\"SizeBytes\":26,\"StreamViewType\":\"NEW_AND_OLD_IMAGES\"},\"eventSourceARN\":\"stream-ARN\"}]}",
+  "resource": "/{proxy+}",
+  "path": "/path/to/resource",
+  "httpMethod": "POST",
+  "isBase64Encoded": false,
+  "queryStringParameters": {
+    "foo": "bar"
+  },
+  "pathParameters": {
+    "proxy": "/path/to/resource"
+  },
+  "stageVariables": {
+    "baz": "qux"
+  },
+  "headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, sdch",
+    "Accept-Language": "en-US,en;q=0.8",
+    "Cache-Control": "max-age=0",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Custom User Agent String",
+    "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==",
+    "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "resourceId": "123456",
+    "stage": "prod",
+    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    "requestTime": "09/Apr/2015:12:34:56 +0000",
+    "requestTimeEpoch": 1428582896000,
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "accessKey": null,
+      "sourceIp": "127.0.0.1",
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "Custom User Agent String",
+      "user": null
+    },
+    "path": "/prod/path/to/resource",
+    "resourcePath": "/{proxy+}",
+    "httpMethod": "POST",
+    "apiId": "1234567890",
+    "protocol": "HTTP/1.1"
+  }
+}

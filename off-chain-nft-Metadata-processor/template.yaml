@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+  - Name: DatadogServerless
+    Parameters:
+      stackName: !Ref "AWS::StackName"
+      apiKey: 434486c28a50b9acd7830bbc129ca5eb
+      nodeLayerVersion: 78
+      extensionLayerVersion: 22
+      site: datadoghq.com
+      env: !Ref Env # Optional
+      service: off-chain-nft-metadata-processor 
+Description: >
+  off-chain-nft-metadata-processor
+  
+Globals:
+  Function:
+    Timeout: 60
+    Runtime: nodejs14.x
+
+Parameters:
+  Env: 
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      DynamoDbEndpoint: ''
+      DynamoDBARN: 'arn:aws:dynamodb:entitydb-arn/stream/2022-06-06T22:53:11.390'
+      EntityTableName: playdust-parrotfish-entitydb
+      FunctionName: off-chain-nft-metadata-processor-testing
+      CollectionIdQueueName: DuplicateCollectionIdSQSQueue
+      NumberOfHTTPRequests: 5
+      HttpTimeoutScalingFactor: 0.25
+    prod:
+      DynamoDbEndpoint: '' 
+      DynamoDBARN: 'arn:aws:dynamodb:us-east-1:513523160844:table/playdust-parrotfish-prod-entitydb/stream/2022-06-07T18:55:10.458'
+      EntityTableName: playdust-parrotfish-prod-entitydb
+      FunctionName: off-chain-nft-metadata-processor-prod
+      CollectionIdQueueName: DuplicateCollectionIdSQSQueue
+      NumberOfHTTPRequests: 5
+      HttpTimeoutScalingFactor: 0.25
+
+Resources:
+  OffchainMetadataProcessor:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties: 
+      FunctionName: !FindInMap [ EnvMapping, !Ref Env, FunctionName ]
+      CodeUri: ./build
+      Handler: lambdaEntrypoint.handler
+      MemorySize: 384
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, DynamoDbEndpoint ]
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+          SQS_QUEUE_NAME:    !FindInMap [ EnvMapping, !Ref Env, CollectionIdQueueName ]
+          NUMBER_OF_HTTP_REQUESTS:    !FindInMap [ EnvMapping, !Ref Env, NumberOfHTTPRequests ]
+          HTTP_TIMEOUT_SCALING_FACTOR:    !FindInMap [ EnvMapping, !Ref Env, HttpTimeoutScalingFactor ]
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonSQSFullAccess
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !FindInMap [ EnvMapping, !Ref Env, DynamoDBARN ]
+            BatchSize: 1
+            ParallelizationFactor: 10
+            StartingPosition: TRIM_HORIZON
+            FilterCriteria:
+              Filters:
+                - Pattern: "{ \"dynamodb\": { \"NewImage\": { \"type\": { \"S\": [ \"MetaplexOnChainMetadata\" ] } } } }"

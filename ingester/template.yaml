@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+  - Name: DatadogServerless
+    Parameters:
+      stackName: !Ref "AWS::StackName"
+      apiKey: "434486c28a50b9acd7830bbc129ca5eb"
+      nodeLayerVersion: 78
+      extensionLayerVersion: 22
+      site: "datadoghq.com"
+      env: !Ref Env # Optional
+      service: "ingester"
+Description: >
+  ingester
+
+  Sample SAM Template for ingester
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+      - testing
+      - prod
+    Description: Environment in which the app will be deployed
+
+Mappings:
+  EnvMapping:
+    testing:
+      EntityTableName: playdust-parrotfish-entitydb
+      MaxBlocksPerRequest: 10000
+      RpcEndpoint: https://ssc-dao.genesysgo.net/
+      LogEnabled: true
+    prod:
+      EntityTableName: playdust-parrotfish-prod-entitydb
+      MaxBlocksPerRequest: 10000
+      RpcEndpoint: https://ssc-dao.genesysgo.net/
+      LogEnabled: false
+
+Resources:
+  SlotQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 721
+  IngesterFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: 
+        !Join
+          - ''
+          - - 'ingester-'
+            - !Ref Env
+      Timeout: 300
+      MemorySize: 256
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt SlotQueue.QueueName
+      Environment:
+        Variables:
+          SLOT_QUEUE_URL: !Ref SlotQueue
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+          MAX_BLOCKS_PER_REQUEST: !FindInMap [ EnvMapping, !Ref Env, MaxBlocksPerRequest ]
+          RPC_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, RpcEndpoint ]
+      CodeUri: ingest-transactions/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      Events:
+        CloudWatchEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints: 
+        - app.ts
+  BlockFetcherFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: 
+        !Join
+          - ''
+          - - 'block-fetcher-'
+            - !Ref Env
+      Timeout: 720
+      MemorySize: 512
+      ReservedConcurrentExecutions: 15
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - SQSPollerPolicy:
+            QueueName: !GetAtt SlotQueue.QueueName
+      Environment:
+        Variables:
+          SLOT_QUEUE_URL: !Ref SlotQueue
+          ENTITY_TABLE_NAME: !FindInMap [ EnvMapping, !Ref Env, EntityTableName ]
+          RPC_ENDPOINT: !FindInMap [ EnvMapping, !Ref Env, RpcEndpoint ]
+          LOG_ENABLED: !FindInMap [ EnvMapping, !Ref Env, LogEnabled ]
+      CodeUri: tagger/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SlotQueue.Arn
+            BatchSize: 5
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints: 
+        - app.ts
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  IngesterFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt IngesterFunction.Arn
+  IngesterFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt IngesterFunction.Arn
+  BlockFetcherFunction:
+    Description: "Fetches block and sends important transactions to SQS"
+    Value: !GetAtt BlockFetcherFunction.Arn
